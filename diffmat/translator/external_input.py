@@ -71,6 +71,12 @@ class ExtInputGenerator:
         self.toolkit_path = PurePath(toolkit_path)
 
         # Detect SAT version
+        self.detect_sat_version()
+
+        # Copy and clean up the source XML tree as a template
+        self.reset()
+
+    def detect_sat_version(self):
         cooker_name = 'sbscooker.exe' if self.system_name == 'Windows' else 'sbscooker'
         cooker_path = Path(self.toolkit_path) / cooker_name
         if not cooker_path.exists():
@@ -89,9 +95,6 @@ class ExtInputGenerator:
         # Reserved fields for automatically fixing SAT-related errors
         self.toolkit_version_fix = ''
         self.cpu_engine_fix = ''
-
-        # Copy and clean up the source XML tree as a template
-        self.reset()
 
     def reset(self):
         """Purge the I/O material graph of nodes and outputs, only retaining a template of the
@@ -192,7 +195,6 @@ class ExtInputGenerator:
 
         # Finally, attach the node to the I/O material graph
         self.root.find('.//compNodes').append(node_fix_et)
-
 
     def _add_output_node(self, node_name: str, node_uid: int, node_gpos: Tuple[int, int, int],
                          output_name: str, output_uid: int, output_index: int = 0,
@@ -429,6 +431,12 @@ class ExtInputGenerator:
 
         return output
 
+    def get_sbscooker_path(self):
+        return self.toolkit_path / 'sbscooker'
+    
+    def get_sbsrender_path(self):
+        return self.toolkit_path / 'sbsrender'
+    
     def _generate_textures(self, seed: int, img_format: str, mode: str = 'input',
                            file_name: str = '', result_folder: PathLike = '.'):
         """Generate input texture maps using Substance Automation Toolkit.
@@ -460,8 +468,9 @@ class ExtInputGenerator:
         sbsar_file_name = (result_folder / file_name).with_suffix('.sbsar')
 
         # Toolkit executable names
-        cooker_path = self.toolkit_path / 'sbscooker'
-        render_path = self.toolkit_path / 'sbsrender'
+        cooker_path = self.get_sbscooker_path() # self.toolkit_path / 'sbscooker'
+        render_path = self.get_sbsrender_path() # self.toolkit_path / 'sbsrender'
+        # packages_dir = self.toolkit_path / 'resources' / 'packages'
 
         # Assemble cooker, render, and cleanup commands
         command_cooker = (
