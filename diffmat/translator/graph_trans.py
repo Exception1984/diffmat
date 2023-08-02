@@ -21,6 +21,8 @@ from diffmat.translator.util import (
     find_connections, load_node_config, NODE_CATEGORY_LUT, FACTORY_LUT
 )
 
+from .client_input import ClientInputGenerator
+
 # Class factory dictionary
 CLASS_FACTORY: Dict[str, Type[BaseNodeTranslator]] = {
     'MaterialNodeTranslator': MaterialNodeTranslator,
@@ -35,8 +37,10 @@ class MaterialGraphTranslator(BaseGraphTranslator[MaterialNodeTranslator]):
     """Translator of XML to a differentiable material graph.
     """
     def __init__(self, root: Union[PathLike, ET.Element], res: int, external_noise: bool = True,
-                 toolkit_path: Optional[PathLike] = None, ablation: bool = False,
-                 integer_option: str = 'integer'):
+                 toolkit_path: Optional[PathLike] = None,  ablation: bool = False,
+                 integer_option: str = 'integer',
+                 host = None,
+                 port = None):
         """Initialize the material graph translator using a source XML file or ElementTree root
         node.
 
@@ -70,7 +74,11 @@ class MaterialGraphTranslator(BaseGraphTranslator[MaterialNodeTranslator]):
             self.graph_name = graph_name.lower().replace(' ', '_')
 
         # Create an external input generator
-        self.input_generator = ExtInputGenerator(self.root, res, toolkit_path=toolkit_path)
+        if host is None or port is None:
+            self.input_generator = ExtInputGenerator(self.root, res, toolkit_path=toolkit_path)
+        else:
+            # Use Server to generate external files
+            self.input_generator = ClientInputGenerator(self.root, res, host, port)
 
     def _init_graph(self):
         """Build a graph data structure from the XML tree, which is a dictionary from node UIDs to
@@ -427,6 +435,7 @@ class MaterialGraphTranslator(BaseGraphTranslator[MaterialNodeTranslator]):
 
         return MaterialGraph(nodes, self.graph_name, self.res,
                              external_inputs=external_inputs, exposed_params=exposed_params,
+<<<<<<< HEAD
                              render_params=render_params, use_alpha=use_alpha, **kwargs)
 
     def get_node_annotations(self) -> Dict[str, str]:
@@ -493,3 +502,6 @@ class MaterialGraphTranslator(BaseGraphTranslator[MaterialNodeTranslator]):
 
         # Write the annotated XML tree to file
         ET.ElementTree(root).write(sbs_file_path)
+=======
+                             render_params=render_params, use_alpha=use_alpha, **kwargs)
+>>>>>>> Adapted graph_trans.py to be compatible with the SAT server.
