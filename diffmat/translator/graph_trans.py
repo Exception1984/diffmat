@@ -13,6 +13,8 @@ from ..core.base import BaseParameter
 from ..core.render import Renderer
 from ..core.graph import MaterialGraph
 
+from .client_input import ClientInputGenerator
+
 
 # Class factory dictionary
 CLASS_FACTORY: Dict[str, Type[BaseNodeTranslator]] = {
@@ -25,7 +27,9 @@ class MaterialGraphTranslator(BaseGraphTranslator[MaterialNodeTranslator]):
     """Translator of XML to a differentiable material graph.
     """
     def __init__(self, root: Union[PathLike, ET.Element], res: int, external_noise: bool = True,
-                 toolkit_path: Optional[PathLike] = None):
+                 toolkit_path: Optional[PathLike] = None,
+                 host = None,
+                 port = None):
         """Initialize the material graph translator using a source XML file or ElementTree root
         node.
 
@@ -57,7 +61,11 @@ class MaterialGraphTranslator(BaseGraphTranslator[MaterialNodeTranslator]):
             self.graph_name = graph_name.lower().replace(' ', '_')
 
         # Create an external input generator
-        self.input_generator = ExtInputGenerator(self.root, res, toolkit_path=toolkit_path)
+        if host is None or port is None:
+            self.input_generator = ExtInputGenerator(self.root, res, toolkit_path=toolkit_path)
+        else:
+            # Use Server to generate external files
+            self.input_generator = ClientInputGenerator(self.root, res, host, port)
 
     def _init_graph(self):
         """Build a graph data structure from the XML tree, which is a dictionary from node UIDs to
