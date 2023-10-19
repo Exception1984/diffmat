@@ -92,10 +92,13 @@ class ExtInputGenerator:
 
         self.toolkit_version = version
 
+<<<<<<< HEAD
         # Reserved fields for automatically fixing SAT-related errors
         self.toolkit_version_fix = ''
         self.cpu_engine_fix = ''
 
+=======
+>>>>>>> 91d21d45bec2752eaa8a678f882715e63b57b7d4
     def reset(self):
         """Purge the I/O material graph of nodes and outputs, only retaining a template of the
         source material graph. Meanwhile, prepare the I/O material graph and the ground truth graph

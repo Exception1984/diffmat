@@ -37,8 +37,12 @@ class MaterialGraphTranslator(BaseGraphTranslator[MaterialNodeTranslator]):
     """Translator of XML to a differentiable material graph.
     """
     def __init__(self, root: Union[PathLike, ET.Element], res: int, external_noise: bool = True,
+<<<<<<< HEAD
                  toolkit_path: Optional[PathLike] = None,  ablation: bool = False,
                  integer_option: str = 'integer',
+=======
+                 toolkit_path: Optional[PathLike] = None,
+>>>>>>> 91d21d45bec2752eaa8a678f882715e63b57b7d4
                  host = None,
                  port = None):
         """Initialize the material graph translator using a source XML file or ElementTree root
@@ -436,6 +440,7 @@ class MaterialGraphTranslator(BaseGraphTranslator[MaterialNodeTranslator]):
         return MaterialGraph(nodes, self.graph_name, self.res,
                              external_inputs=external_inputs, exposed_params=exposed_params,
 <<<<<<< HEAD
+<<<<<<< HEAD
                              render_params=render_params, use_alpha=use_alpha, **kwargs)
 
     def get_node_annotations(self) -> Dict[str, str]:
@@ -505,3 +510,6 @@ class MaterialGraphTranslator(BaseGraphTranslator[MaterialNodeTranslator]):
 =======
                              render_params=render_params, use_alpha=use_alpha, **kwargs)
 >>>>>>> Adapted graph_trans.py to be compatible with the SAT server.
+=======
+                             render_params=render_params, use_alpha=use_alpha, **kwargs)
+>>>>>>> 91d21d45bec2752eaa8a678f882715e63b57b7d4
