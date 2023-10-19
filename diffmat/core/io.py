@@ -35,7 +35,7 @@ def read_image(filename: PathLike, device: DeviceType = 'cpu') -> th.Tensor:
     # Convert the image array to float tensor according to its data type
     if img_np.dtype == np.uint8:
         img_np = img_np.astype(np.float32) / 255.0
-    elif img_np.dtype == np.uint16:
+    elif img_np.dtype == np.uint16 or img_np.dtype == np.int32:
         img_np = img_np.astype(np.float32) / 65535.0
     else:
         raise ValueError(f'Unrecognized image pixel value type: {img_np.dtype}')
